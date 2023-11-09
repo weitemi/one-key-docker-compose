@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+
+  kafka:
+    image: wurstmeister/kafka:2.12-2.4.1
+    container_name: kafka
+    # 依赖其他服务时，docker会先启动其他服务，注意service名称的对应
+    depends_on: [ zookeeper ]
+    # 重启策略：在什么情况下服务会重启，可选值有no、always、on-failure、unless-stopped
+    restart: "always"
+    #  宿主机端口号到容器端口号的映射
+    ports:
+      - "9092:9092"
+    # 观景变量的配置，注意引号的使用，也可以使用另一种形式配置（冒号后有空格，且没有最前面的”-“） variable: 123
+    environment:
+      # 如果需要允许其他客户端访问，可能需要将这里的ip改为自己宿主机实际使用的ip地址，如 192.168.2.236
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.31.147:9092
+      # - KAFKA_ADVERTISED_HOST_NAME=127.0.0.1
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_HEAP_OPTS="-Xms200m -Xmx512M"
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true    
+      - KAFKA_BROKER_ID=0      
+   #   - KAFKA_LOG_DIRS="/kafka/kafka-logs-1"
+   # volumes:
+   #   - /usr/local/kafka/logs:/kafka/kafka-logs-1
+
+  zookeeper:
+    image: zookeeper:3.5.9
+    container_name: zookeeper
+    restart: on-failure
+    ports:
+      - "2181:2181"

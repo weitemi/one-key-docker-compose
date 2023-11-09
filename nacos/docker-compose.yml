@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  nacos:
+    image: nacos/nacos-server
+    container_name: nacos
+    restart: always
+    #depends_on:
+    #  - env/mysql
+    environment:
+      NACOS_AUTH_ENABLE: true
+      PREFER_HOST_MODE: hostname #如果支持主机名可以使用hostname,否则使用ip，默认也是ip
+      SPRING_DATASOURCE_PLATFORM: mysql #数据源平台 仅支持mysql或不保存empty
+      MODE: standalone
+      MYSQL_SERVICE_HOST: 192.168.31.147
+      MYSQL_SERVICE_DB_NAME: nacos
+      MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: root
+      NACOS_APPLICATION_PORT: 8848
+      JVM_XMS: 512m
+      JVM_MMS: 320m
+    volumes:
+      - ./standalone-logs:/home/nacos/logs
+      - ./plugins/:/home/nacos/plugins
+      - ./conf/application.properties:/home/nacos/conf/application.properties
+    ports:
+      - "8848:8848"
