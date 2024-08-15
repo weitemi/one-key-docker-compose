@@ -1,13 +1,13 @@
 version: '3.5'
 services:
   rmqnamesrv:
-    image: rocketmqinc/rocketmq
+    image: apache/rocketmq
     container_name: rmqnamesrv
     restart: always
     ports:
       - 9876:9876
     environment:
-    #内存分配
+      #内存分配
       JAVA_OPT_EXT: "-server -Xms1g -Xmx1g"
     volumes:
       - ./logs:/root/logs
@@ -16,9 +16,9 @@ services:
       rmq:
         aliases:
           - rmqnamesrv
-          
+
   rmqbroker:
-    image: rocketmqinc/rocketmq
+    image: apache/rocketmq
     container_name: rmqbroker
     restart: always
     depends_on:
@@ -38,7 +38,7 @@ services:
       rmq:
         aliases:
           - rmqbroker
-          
+
   rmqconsole:
     image: styletang/rocketmq-console-ng
     container_name: rocketmq-console
@@ -56,7 +56,7 @@ services:
       rmq:
         aliases:
           - rmqconsole
-          
+
 networks:
   rmq:
     name: rmq
