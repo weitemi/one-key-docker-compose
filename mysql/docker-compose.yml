@@ -3,6 +3,7 @@ services:
   db:
     image: mysql
     restart: always
+    container_name: mysql
     privileged: true
     environment:
       MYSQL_ROOT_PASSWORD: 123456
